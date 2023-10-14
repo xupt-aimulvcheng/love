@@ -13,9 +13,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>love</name>
     <description>love</description>
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -63,6 +60,14 @@
             <artifactId>weixin-java-common</artifactId>
             <version>4.5.5.B</version>
         </dependency>
+
+<!--        jwt Token认证-->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/com.github.liyiorg/weixin-popular -->
         <dependency>

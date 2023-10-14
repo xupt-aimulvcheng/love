@@ -5,6 +5,7 @@ import com.xupt.love.pojo.WeChatUser;
 import com.xupt.love.util.WxUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,9 @@ import java.net.URLEncoder;
 @RestController
 public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    @Autowired
+    private WxUtils wxUtils;  // 注入 WxUtils 实例
+
     @RequestMapping("/WxCheck")
     public String wxSignatureCheck(
             @RequestParam(value = "signature")String signature,
@@ -38,7 +42,6 @@ public class LoginController {
     }
     @GetMapping("/WxCallBack")
     public String wxCallBack(String code, String state, HttpServletRequest request, HttpServletResponse response) {
-        WeChatUser weChatUser = WxUtils.getUserInfo(code);
-        return weChatUser.toString();
+        return wxUtils.getUserInfo(code);  // 返回JWT
     }
 }
