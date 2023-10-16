@@ -8,8 +8,6 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     username: root
     password: root
-  profile:
-    active: default
   redis:
     # ?????
     database: 0
@@ -31,4 +29,4 @@ spring:
 WeChat:
   appID: wx65db20ecfd57513f
   appSecret: 2a689e3e549a3553013615f1cd28d508
-  url: http://aimu.sv1.k9s.run/WxCallBack
+  url: http://110554cf.r6.cpolar.top/WxCallBack

@@ -69,9 +69,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         logger.info("JWT验证结果: {}", verify);
 
         logger.info("当前SecurityContextHolder的认证状态: {}", SecurityContextHolder.getContext().getAuthentication());
+        if (!verify) {
+            SecurityContextHolder.clearContext();
+        }
 
         // 如果openId有效且JWT验证成功，则为用户进行认证
-        if (openId != null && verify) {
+        if (openId != null && SecurityContextHolder.getContext().getAuthentication() == null  && verify) {
             logger.info("JWT验证成功，openId: {}", openId);
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(openId, null, new ArrayList<>());
             auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -47,7 +47,7 @@ public class LoginController {
     public String wxCallBack(String code, String state, HttpServletRequest request, HttpServletResponse response) {
         return wxUtils.getUserInfo(code);  // 返回JWT
     }
-    @GetMapping("/order/a")
+    @GetMapping("/orders/a")
     public String aVoid(){
         logger.info("aVoid method called");
         return "认证成功";
