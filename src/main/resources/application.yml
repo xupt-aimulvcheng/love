@@ -1,0 +1,34 @@
+server:
+  port: 28
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/asset?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    driverClassName: com.mysql.jdbc.Driver
+    username: root
+    password: root
+  profile:
+    active: default
+  redis:
+    # ?????
+    database: 0
+    # ???redis??
+    host: localhost
+    port: 6379
+    timeout: 60000
+    #    password: cx3262881792
+    # ????
+    # cluster:
+    # nodes : 10.2.32.21:6379,10.2.32.22:6379,10.2.32.23:6379,10.2.32.21:6380,10.2.32.22:6380,10.2.32.23:6380
+    # ????Lettuce???
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: -1
+        max-wait: -1
+WeChat:
+  appID: wx65db20ecfd57513f
+  appSecret: 2a689e3e549a3553013615f1cd28d508
+  url: http://aimu.sv1.k9s.run/WxCallBack

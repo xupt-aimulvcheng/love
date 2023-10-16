@@ -24,84 +24,67 @@ import java.util.concurrent.TimeUnit;
 public class JwtUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
-
-    /**
-     * 过期时间: 2小时
-     */
     private static final long EXPIRE_TIME = 7200;
 
-    /**
-     * 使用 appid 签名
-     */
     @Value("${WeChat.appSecret}")
     private String appSecret;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    /**
-     * 根据微信用户登陆信息创建 token
-     *
-     * @param account 微信用户信息
-     * @return 返回 jwt token
-     */
+    // 为用户签署JWT令牌
     public String sign(WeChatUser account) {
-        // JWT 随机ID,作为 redis 验证的 key
         String jwtId = UUID.randomUUID().toString();
-        // 1. 使用加密算法进行签名得到 token
         Algorithm algorithm = Algorithm.HMAC256(appSecret);
+        // 创建JWT令牌
         String token = JWT.create()
                 .withClaim("openId", account.getOpenId())
                 .withClaim("jwt-id", jwtId)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME * 1000))
                 .sign(algorithm);
-        // 2. Redis 缓存 JWT, 注: 请和 JWT 过期时间一致
+        // 在Redis中存储JWT令牌
         redisTemplate.opsForValue().set("WX-JWT-SESSION-" + jwtId, token, EXPIRE_TIME, TimeUnit.SECONDS);
         logger.info("为 openId: {} 生成了 JWT", account.getOpenId());
         return token;
     }
 
-    /**
-     * token 检验
-     *
-     * @param token token
-     * @return bool
-     */
+    // 验证JWT令牌
     public boolean verify(String token) {
         try {
-            // 1. 根据 token 解密，解密出 jwt-id, 先从 redis 中查找出 redisToken, 匹配是否相同
+            // 从Redis中获取JWT令牌
             String redisToken = redisTemplate.opsForValue().get("WX-JWT-SESSION-" + getClaimsByToken(token).get("jwt-id").asString());
+            logger.info("从Redis中检索到的token: {}", redisToken);
             if (!token.equals(redisToken)) {
+                logger.warn("传入的token与Redis中的token不匹配");
                 return Boolean.FALSE;
             }
-            // 2. 得到算法相同的 JWTVerifier
             Algorithm algorithm = Algorithm.HMAC256(appSecret);
+            logger.info("使用的appSecret: {}", appSecret);
+            // 使用JWT令牌进行验证
             JWTVerifier verifier = JWT.require(algorithm)
                     .withClaim("openId", getClaimsByToken(redisToken).get("openId").asString())
                     .withClaim("jwt-id", getClaimsByToken(redisToken).get("jwt-id").asString())
                     .build();
-            // 3. 验证 token
-            verifier.verify(token);
-            // 4. Redis 缓存 JWT 续期
+            verifier.verify(token);  // 这里可能抛出异常
+            logger.info("JWT验证成功");
             redisTemplate.opsForValue().set("WX-JWT-SESSION-" + getClaimsByToken(token).get("jwt-id").asString(),
                     redisToken,
                     EXPIRE_TIME,
                     TimeUnit.SECONDS);
             return Boolean.TRUE;
         } catch (JWTVerificationException e) {
-            logger.warn("验证 token: {} 失败", token, e);
+            logger.warn("JWT验证失败，异常原因: {}", e.getMessage());
+            return Boolean.FALSE;
+        } catch (Exception e) {
+            logger.error("处理 token: {} 时发生未知异常", token, e);
             return Boolean.FALSE;
         }
     }
 
-    /**
-     * 从 token 解密信息
-     *
-     * @param token token
-     * @return 解密得到的声明集合
-     * @throws JWTDecodeException 解密异常
-     */
+    // 从JWT令牌中解码claims
     public Map<String, Claim> getClaimsByToken(String token) throws JWTDecodeException {
-        return JWT.decode(token).getClaims();
+        Map<String, Claim> claims = JWT.decode(token).getClaims();
+        logger.info("从token中解析的声明: {}", claims);
+        return claims;
     }
 }

@@ -1,0 +1,10 @@
+security:
+  public-paths:
+    - /products/**
+    - /WxLogin
+    - /favicon.ico
+    - /WxCallBack
+    - /WxCheck
+  authenticated-paths:
+    - /account/**
+    - /orders/**
