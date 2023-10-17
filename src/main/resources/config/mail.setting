@@ -1,0 +1,10 @@
+host = smtp.qq.com
+port = 587
+from = 3262881792@qq.com
+user = 3262881792
+# 密码（注意，某些邮箱需要为SMTP服务单独设置授权码 比如QQ邮箱）
+pass = rqodsunymwbrcjae
+#使用 STARTTLS安全连接，STARTTLS是对纯文本通信协议的扩展
+starttlsEnable = true
+# 需要设置为false 否则QQ邮箱测试邮件发送报错
+sslEnable = false

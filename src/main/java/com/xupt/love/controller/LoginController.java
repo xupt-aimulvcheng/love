@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 @RestController
+@RequestMapping("WeChat")
 public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired

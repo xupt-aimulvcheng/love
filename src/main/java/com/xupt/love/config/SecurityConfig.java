@@ -37,12 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        securityProperties.getPublicPaths().forEach(s -> {
-            logger.info("publishPaths:{}",s);
-        });
-        securityProperties.getAuthenticatedPaths().forEach(s -> {
-            logger.info("authenticatedPaths:{}",s);
-        });
         http
                 .csrf().disable()
                 .authorizeRequests()
@@ -51,24 +45,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(securityProperties.getAuthenticatedPaths().toArray(new String[0])).authenticated()
                 .anyRequest().denyAll()
                 .and()
-                .exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPoint() {
-                    @Override
-                    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-                        response.sendRedirect("/WxLogin");  // 重定向到微信登录页面
-                    }
-                })
-//                .exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
-//                    logger.info("用户未认证，正在调用AuthenticationEntryPoint.commence()");
-//                    response.setContentType("application/json;charset=UTF-8");
-//                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//                    JsonObject errorObj = new JsonObject();
-//                    errorObj.addProperty("error", "用户未认证");
-//                    errorObj.addProperty("message", "请登录后再访问该资源");
-//                    PrintWriter out = response.getWriter();
-//                    out.print(errorObj.toString());
-//                    out.flush();
-//                    out.close();
-//                })
+                // .exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPoint() {
+                //     @Override
+                //     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+                //         response.sendRedirect("/WxLogin");  // 重定向到微信登录页面
+                //     }
+                // })
+               .exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
+                   logger.info("用户未认证，正在调用AuthenticationEntryPoint.commence()");
+                   response.setContentType("application/json;charset=UTF-8");
+                   response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                   JsonObject errorObj = new JsonObject();
+                   errorObj.addProperty("error", "用户未认证");
+                   errorObj.addProperty("message", "请登录后再访问该资源");
+                   PrintWriter out = response.getWriter();
+                   out.print(errorObj.toString());
+                   out.flush();
+                   out.close();
+               })
                 .and()
 //                // 添加JWT验证过滤器
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil,securityProperties), UsernamePasswordAuthenticationFilter.class)

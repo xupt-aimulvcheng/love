@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -23,6 +24,7 @@ import java.util.Map;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private final JwtUtil jwtUtil;
     private SecurityProperties securityProperties;
@@ -39,12 +41,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         logger.info("进入JwtAuthenticationFilter，正在处理URL: {}", request.getRequestURI());
 
         String requestURI = request.getRequestURI();
+        boolean isPublicPath = securityProperties.getPublicPaths().stream()
+                .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
         // 检查URL是否在公开访问列表中
-        if (securityProperties.getPublicPaths().contains(requestURI)) {
+        if (isPublicPath) {
             logger.info("当前URL在允许访问的列表中，不进行JWT验证");
             filterChain.doFilter(request, response);
             return;
         }
+
 
         final String authorizationHeader = request.getHeader("Authorization");
         String openId = null;

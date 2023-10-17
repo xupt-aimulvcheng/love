@@ -1,10 +1,10 @@
 security:
+#  允许访问的接口
   public-paths:
-    - /products/**
-    - /WxLogin
+    - /WeChat/**
+    - /auth/**
     - /favicon.ico
-    - /WxCallBack
-    - /WxCheck
+#   需要认证的接口
   authenticated-paths:
     - /account/**
     - /orders/**
