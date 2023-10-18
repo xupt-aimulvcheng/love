@@ -1,10 +1,15 @@
 server:
   port: 28
+  servlet:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
 spring:
   profiles:
     active: dev
   datasource:
-    url: jdbc:mysql://localhost:3306/asset?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/love?useSSL=false&useUnicode=true&characterEncoding=UTF-8
     driverClassName: com.mysql.jdbc.Driver
     username: root
     password: root

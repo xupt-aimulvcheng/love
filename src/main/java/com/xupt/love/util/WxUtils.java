@@ -1,8 +1,10 @@
 package com.xupt.love.util;
 
 import com.alibaba.fastjson.JSON;
+import com.xupt.love.mapper.UserMapper;
 import com.xupt.love.pojo.TokenInfo;
 import com.xupt.love.pojo.WeChatUser;
+import com.xupt.love.service.UserService;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -24,6 +26,8 @@ public class WxUtils {
 
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private UserMapper userMapper;
 
     private final HttpClient httpClient = HttpClients.createDefault();
 
@@ -42,6 +46,11 @@ public class WxUtils {
                 if (userInfoResponse.getStatusLine().getStatusCode() == 200) {
                     String userInfoResult = EntityUtils.toString(userInfoResponse.getEntity(), "UTF-8");
                     WeChatUser weChatUser = JSON.parseObject(userInfoResult, WeChatUser.class);
+                    // todo 数据库没有该用户时自动注册
+                    // 根据openId查询用户是否存在
+                    if(userMapper.getByOpenId(weChatUser.getOpenId()) == null){
+                        userMapper.insertUser(weChatUser);
+                    }
 
                     // 在此处生成 JWT 令牌，并将其返回
                     String jwt = jwtUtil.sign(weChatUser);

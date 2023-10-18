@@ -2,29 +2,29 @@ package com.xupt.love.config.enums;
 
 public class Result<T> {
     
-    private int statusCode;
+    private int code;
     private String message;
     private T data;
 
-    public Result(int statusCode, String message) {
-        this.statusCode = statusCode;
+    public Result(int code, String message) {
+        this.code = code;
         this.message = message;
     }
 
-    public Result(int statusCode, String message, T data) {
-        this.statusCode = statusCode;
+    public Result(int code, String message, T data) {
+        this.code = code;
         this.message = message;
         this.data = data;
     }
 
     // getters and setters
 
-    public int getStatusCode() {
-        return statusCode;
+    public int getCode() {
+        return code;
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getMessage() {

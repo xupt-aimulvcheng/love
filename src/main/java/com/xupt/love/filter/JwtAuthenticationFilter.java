@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private SecurityProperties securityProperties;
 
-    @Autowired
+    // @Autowired
     public JwtAuthenticationFilter(JwtUtil jwtUtil, SecurityProperties securityProperties) {
         this.jwtUtil = jwtUtil;
         this.securityProperties = securityProperties;
