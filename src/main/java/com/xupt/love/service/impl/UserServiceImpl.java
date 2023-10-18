@@ -1,6 +1,7 @@
 package com.xupt.love.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -103,7 +104,9 @@ public class UserServiceImpl implements UserService {
         // 比对验证码是否匹配
         if (storedCode != null && storedCode.equals(userDTO.getEmailCode())) {
             logger.info("userDTO:{}",userDTO);
-            WeChatUser weChatUser = BeanUtil.copyProperties(userDTO, WeChatUser.class);
+            WeChatUser weChatUser = new WeChatUser();
+            CopyOptions copyOptions = CopyOptions.create().setIgnoreNullValue(true); // 设置忽略null值
+            BeanUtil.copyProperties(userDTO, weChatUser, copyOptions);
             userMapper.insertUser(weChatUser);
             // 如果验证码验证成功，从Redis中删除验证码
             redisTemplate.delete(REDIS_KEY + userDTO.getEmail());

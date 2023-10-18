@@ -19,12 +19,12 @@
         SELECT * FROM WeChatUser WHERE userId = #{userId}
     </select>
 
-    <insert id="insertUser" parameterType="com.example.domain.WeChatUser">
+    <insert id="insertUser" parameterType="com.xupt.love.pojo.WeChatUser">
         INSERT INTO WeChatUser (openId, nickName, sex, province, city, country, headImgUrl, username, password)
         VALUES (#{openId}, #{nickName}, #{sex}, #{province}, #{city}, #{country}, #{headImgUrl}, #{username}, #{password})
     </insert>
 
-    <update id="updateUser" parameterType="com.example.domain.WeChatUser">
+    <update id="updateUser" parameterType="com.xupt.love.pojo.WeChatUser">
         UPDATE WeChatUser
         SET openId = #{openId}, nickName = #{nickName}, sex = #{sex}, province = #{province}, city = #{city},
             country = #{country}, headImgUrl = #{headImgUrl}, username = #{username}, password = #{password}
