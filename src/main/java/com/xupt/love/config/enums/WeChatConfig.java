@@ -8,29 +8,28 @@ import javax.annotation.PostConstruct;
 @Component
 public class WeChatConfig {
 
-    private static String appId;
-    private static String secret;
+    @Value("${WeChat.appID}")
+    private String appId;
+
+    @Value("${WeChat.appSecret}")
+    private String secret;
+
+    @Value("${WeChat.aesKey}")
+    private String aesKey;
+
+    @Value("${WeChat.token}")
+    private String token;
 
     public static String APP_ID;
     public static String SECRET;
-
-    @Value("${WeChat.appID}")
-    public void setAppId(String appId) {
-        WeChatConfig.appId = appId;
-    }
-
-    @Value("${WeChat.appSecret}")
-    public void setSecret(String secret) {
-        WeChatConfig.secret = secret;
-    }
+    public static String AES_KEY;
+    public static String TOKEN;
 
     @PostConstruct
-    public void init() {
-        updateStaticFields(appId, secret);
-    }
-
-    private synchronized static void updateStaticFields(String appId, String secret) {
+    private void init() {
         APP_ID = appId;
         SECRET = secret;
+        AES_KEY = aesKey;
+        TOKEN = token;
     }
 }

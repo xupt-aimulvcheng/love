@@ -1,10 +1,9 @@
 security:
 #  允许访问的接口
   public-paths:
-    - /WeChat/**
-    - /auth/**
+    - /api/WeChat/**
+    - /api/auth/**
     - /favicon.ico
 #   需要认证的接口
   authenticated-paths:
-    - /account/**
-    - /orders/**
+

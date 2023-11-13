@@ -7,22 +7,29 @@ server:
       force: true
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+
+mybatis-plus:
+  configuration:
+#    禁用自动的驼峰命名到下划线命名的映射
+    map-underscore-to-camel-case: false
+
+
 spring:
   profiles:
     active: dev
   datasource:
-    url: jdbc:mysql://localhost:3306/love?useSSL=false&useUnicode=true&characterEncoding=UTF-8
-    driverClassName: com.mysql.jdbc.Driver
-    username: root
-    password: root
+    url:
+    driverClassName:
+    username:
+    password:
   redis:
     # ?????
     database: 0
     # ???redis??
-    host: 43.139.139.105
+    host:
     port: 6379
     timeout: 60000
-    password: cx3262881792
+    password:
     # ????
     # cluster:
     # nodes : 10.2.32.21:6379,10.2.32.22:6379,10.2.32.23:6379,10.2.32.21:6380,10.2.32.22:6380,10.2.32.23:6380
@@ -34,6 +41,8 @@ spring:
         min-idle: -1
         max-wait: -1
 WeChat:
-  appID: wx65db20ecfd57513f
-  appSecret: 2a689e3e549a3553013615f1cd28d508
-  url: http://110554cf.r6.cpolar.top/WxCallBack
+  appID:
+  appSecret:
+  url:
+  token:
+  aesKey:

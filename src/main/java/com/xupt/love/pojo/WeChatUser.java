@@ -1,18 +1,26 @@
 package com.xupt.love.pojo;
 
 import cn.hutool.core.lang.Assert;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@TableName("WeChatUser")
 public class WeChatUser implements UserDetails {
     // 用户数据库的ID
+    @TableId
     private Long userId;
 
     // 用户的唯一标识
     private String openId;
+
+    private String appID;
 
     // 用户昵称
     private String nickName;
@@ -41,11 +49,47 @@ public class WeChatUser implements UserDetails {
     private String username;
 
     private String password;
+    @TableLogic
+    private int deleted;
+    @TableField(exist = false)
     private Collection<? extends GrantedAuthority> authorities;
+    @TableField(exist = false)
     private boolean accountNonExpired;
+    @TableField(exist = false)
     private boolean accountNonLocked;
+    @TableField(exist = false)
     private boolean credentialsNonExpired;
+    @TableField(exist = false)
     private boolean enabled;
+
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
+    }
+
 
     public WeChatUser() {
     }
@@ -166,9 +210,17 @@ public class WeChatUser implements UserDetails {
         this.password = password;
     }
 
+    public String getAppID() {
+        return appID;
+    }
+
+    public void setAppID(String appID) {
+        this.appID = appID;
+    }
+
     @Override
     public String getUsername() {
-        return this.openId;
+        return this.username;
     }
 
     @Override
@@ -190,4 +242,5 @@ public class WeChatUser implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
+
 }

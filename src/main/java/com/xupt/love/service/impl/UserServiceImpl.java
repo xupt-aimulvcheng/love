@@ -7,6 +7,9 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.mail.MailUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xupt.love.config.CustomRuntimeException;
 import com.xupt.love.dto.UserDTO;
 import com.xupt.love.mapper.UserMapper;
@@ -21,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper,WeChatUser> implements UserService {
 
     private static final long DEFAULT_EXPIRE_TIME = 3L; // 邮箱验证码的过期时间，设置为3分钟
     private static final String REDIS_KEY = "EMAIL_CODE:"; // Redis中保存验证码的key前缀
@@ -125,7 +128,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public String authenticate(String username, String password) {
         // 1. 使用用户名查询用户
-        WeChatUser user = userMapper.getByUsername(username);
+        LambdaQueryWrapper<WeChatUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(WeChatUser::getUsername,username);
+        WeChatUser user = getOne(lambdaQueryWrapper);
+
         if (user == null) {
             return null;  // 用户未找到
         }
@@ -138,6 +144,15 @@ public class UserServiceImpl implements UserService {
 
         // 3. 如果验证成功，生成JWT并返回；否则返回null
         return jwtUtil.sign(user);
+    }
+
+    @Override
+    public WeChatUser getOneByOpenidAndAppId(String fromUser, String toUser) {
+        LambdaQueryWrapper<WeChatUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(WeChatUser::getOpenId,fromUser)
+//                .eq(WeChatUser::getAppID,toUser)
+        ;
+        return getOne(lambdaQueryWrapper);
     }
 
 }

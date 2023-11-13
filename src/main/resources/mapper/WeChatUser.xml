@@ -1,5 +1,7 @@
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xupt.love.mapper.UserMapper">
 
     <resultMap id="WeChatUserResultMap" type="com.xupt.love.pojo.WeChatUser">
@@ -13,26 +15,19 @@
         <result property="headImgUrl" column="headImgUrl" />
         <result property="username" column="username" />
         <result property="password" column="password" />
+        <result property="appID" column="appID" />
     </resultMap>
-
-    <select id="selectUserById" parameterType="long" resultMap="WeChatUserResultMap">
-        SELECT * FROM WeChatUser WHERE userId = #{userId}
-    </select>
-
+    <sql id="Base_Column_List">
+        userId,openId,nickName,
+        sex,province,city,
+        country,headImgUrl,privilege,
+        unionId,username,password,appID,
+        deleted
+    </sql>
     <insert id="insertUser" parameterType="com.xupt.love.pojo.WeChatUser">
         INSERT INTO WeChatUser (openId, nickName, sex, province, city, country, headImgUrl, username, password)
         VALUES (#{openId}, #{nickName}, #{sex}, #{province}, #{city}, #{country}, #{headImgUrl}, #{username}, #{password})
     </insert>
 
-    <update id="updateUser" parameterType="com.xupt.love.pojo.WeChatUser">
-        UPDATE WeChatUser
-        SET openId = #{openId}, nickName = #{nickName}, sex = #{sex}, province = #{province}, city = #{city},
-            country = #{country}, headImgUrl = #{headImgUrl}, username = #{username}, password = #{password}
-        WHERE userId = #{userId}
-    </update>
-
-    <delete id="deleteUser" parameterType="long">
-        DELETE FROM WeChatUser WHERE userId = #{userId}
-    </delete>
 
 </mapper>
