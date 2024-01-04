@@ -126,10 +126,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,WeChatUser> implemen
      * @return 生成的jwt
      */
     @Override
-    public String authenticate(String username, String password) {
-        // 1. 使用用户名查询用户
+    public String authenticate(String userInfo, String password) {
+        // 1. 使用正则表达式判断userInfo是邮箱还是用户名
         LambdaQueryWrapper<WeChatUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(WeChatUser::getUsername,username);
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        if (userInfo.matches(emailRegex)) {
+            // 如果userInfo符合邮箱格式
+            lambdaQueryWrapper.eq(WeChatUser::getEmail, userInfo);
+        } else {
+            // 否则，假定它是一个用户名
+            lambdaQueryWrapper.eq(WeChatUser::getUsername, userInfo);
+        }
+
         WeChatUser user = getOne(lambdaQueryWrapper);
 
         if (user == null) {
@@ -145,6 +153,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,WeChatUser> implemen
         // 3. 如果验证成功，生成JWT并返回；否则返回null
         return jwtUtil.sign(user);
     }
+
 
     @Override
     public WeChatUser getOneByOpenidAndAppId(String fromUser, String toUser) {

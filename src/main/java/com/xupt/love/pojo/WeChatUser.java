@@ -49,6 +49,7 @@ public class WeChatUser implements UserDetails {
     private String username;
 
     private String password;
+    private String email;
     @TableLogic
     private int deleted;
     @TableField(exist = false)
@@ -243,4 +244,11 @@ public class WeChatUser implements UserDetails {
         return this.enabled;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

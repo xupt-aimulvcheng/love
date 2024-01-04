@@ -9,7 +9,7 @@ public interface UserService extends IService<WeChatUser> {
 
     boolean validateEmailCode(UserDTO userDTO);
 
-    String authenticate(String username, String password);
+    String authenticate(String userInfo,String password);
 
     WeChatUser getOneByOpenidAndAppId(String fromUser, String toUser);
 }

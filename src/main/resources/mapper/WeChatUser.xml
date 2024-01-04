@@ -16,6 +16,7 @@
         <result property="username" column="username" />
         <result property="password" column="password" />
         <result property="appID" column="appID" />
+        <result property="email" column="email" />
     </resultMap>
     <sql id="Base_Column_List">
         userId,openId,nickName,
@@ -25,8 +26,8 @@
         deleted
     </sql>
     <insert id="insertUser" parameterType="com.xupt.love.pojo.WeChatUser">
-        INSERT INTO WeChatUser (openId, nickName, sex, province, city, country, headImgUrl, username, password)
-        VALUES (#{openId}, #{nickName}, #{sex}, #{province}, #{city}, #{country}, #{headImgUrl}, #{username}, #{password})
+        INSERT INTO WeChatUser (openId, nickName, sex, province, city, country, headImgUrl, username, password,email)
+        VALUES (#{openId}, #{nickName}, #{sex}, #{province}, #{city}, #{country}, #{headImgUrl}, #{username}, #{password}, #{email})
     </insert>
 
 

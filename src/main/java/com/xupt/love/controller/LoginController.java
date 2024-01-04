@@ -54,8 +54,13 @@ public class LoginController {
         return echostr;
     }
 
+    /**
+     *
+     * @return 微信登录的二维码以及验证是否登录的凭证
+     * @throws IOException
+     */
     @GetMapping("/WxLogin")
-    public ResponseEntity<?> wxLoginPage(HttpServletResponse httpServletResponse) throws IOException {
+    public ResponseEntity<?> wxLoginPage() throws IOException {
         WxOAuth2Service oAuth2Service = wxMpService.getOAuth2Service();
         String url = oAuth2Service.buildAuthorizationUrl(WXurl, WxConsts.OAuth2Scope.SNSAPI_USERINFO, null);
         generateKey();
@@ -65,6 +70,17 @@ public class LoginController {
 
         return ResponseEntity.ok(response);
     }
+
+    /**
+     *
+     * @param code 微信返回的code，见微信的文档
+     * @param state 见微信的文档
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return
+     * @throws IOException
+     * @throws WxErrorException 是否登录成功的信息
+     */
     @RequestMapping("/WxCallBack")
     public String wxCallBack(String code, String state, HttpServletRequest request, HttpServletResponse response) throws IOException, WxErrorException {
 //        WxOAuth2Service oAuth2Service = wxMpService.getOAuth2Service();
@@ -81,6 +97,12 @@ public class LoginController {
             return "抱歉，请关注公众号后重新扫码登录";
         }
     }
+
+    /**
+     *
+     * @param tempId WxLogin接口中的验证是否登录的凭证
+     * @return 是否登录成功
+     */
     @GetMapping("/checkIsLogin")
     public Result checkIsLogin(@RequestParam String tempId) {
         Map<String, Object> responseMap = new HashMap<>();
